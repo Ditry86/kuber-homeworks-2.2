@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-multitool
+  labels:
+    app: busybox-multitool
+spec:
+  selector:
+    matchLabels:
+      app: busybox-multitool
+  template:
+    metadata:
+      labels:
+        app: busybox-multitool
+    spec:
+      containers:
+        - name: multitool
+          image: wbitt/network-multitool
+          env:
+          - name: HTTP_PORT
+            value: "1180"
+          - name: HTTPS_PORT
+            value: "11443"
+          ports:
+          - containerPort: 1180
+            name: http-port
+          - containerPort: 11443
+            name: https-port
+          resources:
+            requests:
+              cpu: "1m"
+              memory: "20Mi"
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add: ["NET_ADMIN"]
+          volumeMounts:
+            - name: volume1
+              mountPath: /mnt/volume1
+        - name: busybox
+          image: busybox
+          command: ["/bin/sh"]
+          args: ["-c", "while true; do date > /mnt/volume1/stream && sleep 5s; done"]
+          volumeMounts:
+            - name: volume1
+              mountPath: /mnt/volume1
+      volumes:
+        - name: volume1
+          persistentVolumeClaim:
+            claimName: local-vol-claim  
