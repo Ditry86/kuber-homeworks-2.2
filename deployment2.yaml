@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: busybox-multitool
+  name: multitool
   labels:
-    app: busybox-multitool
+    app: multitool
 spec:
   selector:
     matchLabels:
-      app: busybox-multitool
+      app: multitool
   template:
     metadata:
       labels:
-        app: busybox-multitool
+        app: multitool
     spec:
       containers:
         - name: multitool
@@ -35,16 +35,9 @@ spec:
             capabilities:
               add: ["NET_ADMIN"]
           volumeMounts:
-            - name: volume1
-              mountPath: /mnt/volume1
-        - name: busybox
-          image: busybox
-          command: ["/bin/sh"]
-          args: ["-c", "while true; do date > /mnt/volume1/stream && sleep 5s; done"]
-          volumeMounts:
-            - name: volume1
+            - name: volume2
               mountPath: /mnt/volume
       volumes:
-        - name: volume1
+        - name: volume2
           persistentVolumeClaim:
-            claimName: local-vol-claim  
+            claimName: my-nfs-pvc
