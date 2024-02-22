@@ -43,7 +43,7 @@ spec:
           args: ["-c", "while true; do date > /mnt/volume1/stream && sleep 5s; done"]
           volumeMounts:
             - name: volume1
-              mountPath: /mnt/volume
+              mountPath: /mnt/volume1
       volumes:
         - name: volume1
           persistentVolumeClaim:

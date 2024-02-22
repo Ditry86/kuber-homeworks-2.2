@@ -8,7 +8,14 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Recycle
-  #storageClassName: local-storage
-  hostPath:
-    path: /media/volume1
+  persistentVolumeReclaimPolicy: Delete
+  local:
+    path: /mnt/volume1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - workbook
